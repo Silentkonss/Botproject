@@ -1,4 +1,4 @@
-from main_db import conn
+from DB.main_db import conn
 
 
 def db_new_chat(chat_id:int, username:str, topic_id):
@@ -6,7 +6,7 @@ def db_new_chat(chat_id:int, username:str, topic_id):
     with conn.cursor() as cur:
         insert_query = ("insert into chatuser (chat_id, user_name, topic_id) VALUES"
                         " (%s, %s, %s) ON CONFLICT DO NOTHING")
-        cur.execute(insert_query, (chat_id, username, topic_id))
+        cur.execute(insert_query, (chat_id, 'anonym', topic_id))
         conn.commit()
 
 def db_list_id():
