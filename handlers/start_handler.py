@@ -34,32 +34,40 @@ async def get_cancel(call: CallbackQuery, state: FSMContext):
 
 @router.message(Command('start'))
 async def start_bot_handler(mess: Message):
-    await mess.answer(texts.greeting_text, reply_markup=start_markup)
-
-
-@router.callback_query(F.data == 'start_messages')
-async def choisen_one(call: CallbackQuery, state: FSMContext):
-    await state.clear()
-    print('Time for choise')
-    await call.message.answer(text='Вы готовы отправить сообщение? Если да - нажмите на кнопку "Отправить"', reply_markup=send_markup_1)
-
-@router.callback_query(F.data == 'send_messages')
-async def inputing_message(mess: Message, state: FSMContext):
-    await state.update_data(mess.from_user.id)
-    list_of_id = db_list_id()
-    if mess.from_user.id not in list_of_id:
-        try:
-            topic = await room_bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str(mess.from_user.id)}')
-            db_new_chat(mess.from_user.id, 'anonym', topic.message_thread_id)
-        except TelegramBadRequest:
-            db_delete_chat(mess.chat.id)
-            topic = await room_bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
-            db_new_chat(mess.from_user.id, "anonym", topic.message_thread_id)
-            topic = db_user_topic(mess.from_user.id)
-        await room_bot.send_message(int(os.getenv('GROUP_ID')), f'У Вас новое сообщение\n@{mess.from_user.id}',
-                                    message_thread_id=topic.message_thread_id)
+    list_id = db_list_id()
+    if mess.from_user.id not in list_id:
+        await mess.answer(texts.greeting_text)
+        print(mess.chat.id)
+        topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
+        db_new_chat(mess.from_user.id, mess.from_user.username, topic.message_thread_id)
     else:
-        pass
+        await mess.answer('С возвращением!')
+
+
+
+
+# @router.callback_query(F.data == 'start_messages')
+# async def choisen_one(call: CallbackQuery, state: FSMContext):
+#     await state.clear()
+#     print('Time for choise')
+#     await call.message.answer(text='Вы готовы отправить сообщение? Если да - нажмите на кнопку "Отправить"', reply_markup=send_markup_1)
+#
+# @router.callback_query(F.data == 'send_messages')
+# async def inputing_message(mess: Message, state: FSMContext):
+#     list_of_id = db_list_id()
+#     if mess.from_user.id not in list_of_id:
+#         try:
+#             topic = await room_bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str(mess.from_user.id)}')
+#             db_new_chat(mess.from_user.id, 'anonym', topic.message_thread_id)
+#         except TelegramBadRequest:
+#             db_delete_chat(mess.chat.id)
+#             topic = await room_bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
+#             db_new_chat(mess.from_user.id, "anonym", topic.message_thread_id)
+#             topic = db_user_topic(mess.from_user.id)
+#         await room_bot.send_message(int(os.getenv('GROUP_ID')), f'У Вас новое сообщение\n@{mess.from_user.id}',
+#                                     message_thread_id=topic.message_thread_id)
+#     else:
+#         pass
 
 
 @router.message()
@@ -78,7 +86,7 @@ async def get_talk(mess: Message):
                 await mess.answer('Можно отправлять Стикер, фото и картинки')
         except TelegramBadRequest:
             db_delete_chat(mess.chat.id)
-            topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str(mess.from_user.username)}')
+            topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
             db_new_chat(mess.from_user.id, mess.from_user.username, topic.message_thread_id)
             topic = db_user_topic(mess.from_user.id)
             try:
