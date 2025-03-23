@@ -80,10 +80,20 @@ async def get_talk(mess: Message):
                     await bot.send_sticker(int(os.getenv('GROUP_ID')), mess.sticker.file_id, message_thread_id=int(topic))
                 elif mess.photo is not None:
                     await bot.send_photo(int(os.getenv('GROUP_ID')), mess.photo[0].file_id, caption=mess.caption, message_thread_id=int(topic))
+                elif mess.audio is not None:
+                    await bot.send_audio(int(os.getenv('GROUP_ID')), mess.audio.file_id, message_thread_id=int(topic))
+                elif mess.video is not None:
+                    await bot.send_video(int(os.getenv('GROUP_ID')), mess.video.file_id, message_thread_id=int(topic))
+                elif mess.voice is not None:
+                    await bot.send_voice(int(os.getenv('GROUP_ID')), mess.voice.file_id, message_thread_id=int(topic))
+                elif mess.video_note is not None:
+                    await bot.send_video_note(int(os.getenv('GROUP_ID')), mess.video_note.file_id, message_thread_id=int(topic))
+                elif mess.document is not None:
+                    await bot.send_document(int(os.getenv('GROUP_ID')), mess.document.file_id, message_thread_id=int(topic))
                 else:
                     await bot.send_message(int(os.getenv('GROUP_ID')), mess.text, message_thread_id=int(topic))
             except ValidationError:
-                await mess.answer('Можно отправлять Стикер, фото и картинки')
+                await mess.answer('Можно отправлять Стикер, фото, картинки, аудио, видео, видеосообщение, голосовое сообщение и документы')
         except TelegramBadRequest:
             db_delete_chat(mess.chat.id)
             topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
@@ -91,13 +101,27 @@ async def get_talk(mess: Message):
             topic = db_user_topic(mess.from_user.id)
             try:
                 if mess.sticker is not None:
-                    await bot.send_sticker(int(os.getenv('GROUP_ID')), mess.sticker.file_id, message_thread_id=int(topic))
+                    await bot.send_sticker(int(os.getenv('GROUP_ID')), mess.sticker.file_id,
+                                           message_thread_id=int(topic))
                 elif mess.photo is not None:
-                    await bot.send_photo(int(os.getenv('GROUP_ID')), mess.photo[0].file_id, caption=mess.caption, message_thread_id=int(topic))
+                    await bot.send_photo(int(os.getenv('GROUP_ID')), mess.photo[0].file_id, caption=mess.caption,
+                                         message_thread_id=int(topic))
+                elif mess.audio is not None:
+                    await bot.send_audio(int(os.getenv('GROUP_ID')), mess.audio.file_id, message_thread_id=int(topic))
+                elif mess.video is not None:
+                    await bot.send_video(int(os.getenv('GROUP_ID')), mess.video.file_id, message_thread_id=int(topic))
+                elif mess.voice is not None:
+                    await bot.send_voice(int(os.getenv('GROUP_ID')), mess.voice.file_id, message_thread_id=int(topic))
+                elif mess.video_note is not None:
+                    await bot.send_video_note(int(os.getenv('GROUP_ID')), mess.video_note.file_id,
+                                              message_thread_id=int(topic))
+                elif mess.document is not None:
+                    await bot.send_document(int(os.getenv('GROUP_ID')), mess.document.file_id,
+                                            message_thread_id=int(topic))
                 else:
                     await bot.send_message(int(os.getenv('GROUP_ID')), mess.text, message_thread_id=int(topic))
             except ValidationError:
-                await mess.answer('Можно отправлять Стикер, фото и картинки')
+                await mess.answer('Можно отправлять Стикер, фото, картинки, аудио, видео, видеосообщение, голосовое сообщение и документы')
 
     elif mess.chat.id == int(os.getenv('GROUP_ID')) and mess.from_user.is_bot is False:
         topic = mess.message_thread_id
