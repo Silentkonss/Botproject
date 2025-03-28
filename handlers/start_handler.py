@@ -38,7 +38,7 @@ async def start_bot_handler(mess: Message):
     if mess.from_user.id not in list_id:
         await mess.answer(texts.greeting_text)
         print(mess.chat.id)
-        topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
+        topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str("anonym")}')
         db_new_chat(mess.from_user.id, mess.from_user.username, topic.message_thread_id)
     else:
         await mess.answer('С возвращением!')
