@@ -118,6 +118,8 @@ async def get_talk(mess: Message):
                 elif mess.document is not None:
                     await bot.send_document(int(os.getenv('GROUP_ID')), mess.document.file_id,
                                             message_thread_id=int(topic))
+                elif mess.animation is not None:
+                    await bot.send_animation(int(os.getenv('GROUP_ID')), mess.animation.file_id, message_thread_id=int(topic))
                 else:
                     await bot.send_message(int(os.getenv('GROUP_ID')), mess.text, message_thread_id=int(topic))
             except ValidationError:
