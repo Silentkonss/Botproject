@@ -96,7 +96,7 @@ async def get_talk(mess: Message):
                 await mess.answer('Можно отправлять Стикер, фото, картинки, аудио, видео, видеосообщение, голосовое сообщение и документы')
         except TelegramBadRequest:
             db_delete_chat(mess.chat.id)
-            topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str('anonym')}')
+            topic = await bot.create_forum_topic(int(os.getenv('GROUP_ID')), f'{str("anonym")}')
             db_new_chat(mess.from_user.id, mess.from_user.username, topic.message_thread_id)
             topic = db_user_topic(mess.from_user.id)
             try:
